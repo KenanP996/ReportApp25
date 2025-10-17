@@ -1,0 +1,49 @@
+<section class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h4 mb-3 text-center">Create a ReportApp25 Account</h2>
+        <p class="text-muted text-center mb-4">
+          Register with your organization email to access the operations dashboard and pickup scheduling tools.
+        </p>
+        <form class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label for="register-name" class="form-label">Full name</label>
+            <input type="text" class="form-control" id="register-name" placeholder="Alex Rivera" required />
+            <div class="invalid-feedback">Your name helps us personalize your dashboard.</div>
+          </div>
+          <div class="mb-3">
+            <label for="register-email" class="form-label">Organization email</label>
+            <input type="email" class="form-control" id="register-email" placeholder="alex@reportapp.ca" required />
+            <div class="invalid-feedback">Use your organization-managed mailbox.</div>
+          </div>
+          <div class="mb-3">
+            <label for="register-role" class="form-label">Requested role</label>
+            <select class="form-select" id="register-role" required>
+              <option value="" selected disabled>Choose role</option>
+              <option value="manager">Manager</option>
+              <option value="team_lead">Team Lead</option>
+            </select>
+            <div class="invalid-feedback">Select the role you need access to.</div>
+          </div>
+          <div class="mb-3">
+            <label for="register-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="register-password" placeholder="Create a password" minlength="8" required />
+            <div class="invalid-feedback">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" value="" id="register-tos" required />
+            <label class="form-check-label" for="register-tos">
+              I agree to the <a href="#terms" data-route="terms">terms of service</a> and <a href="#privacy" data-route="privacy">privacy policy</a>.
+            </label>
+            <div class="invalid-feedback">You must agree before continuing.</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Create Account</button>
+        </form>
+        <p class="text-center small mt-4 mb-0">
+          Already registered? <a href="#login" data-route="login">Sign in.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

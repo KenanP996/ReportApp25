@@ -1,0 +1,25 @@
+<section class="py-3 py-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-9">
+      <h2 class="h3 mb-3">Privacy Notice</h2>
+      <p class="text-muted">
+        ReportApp25 stores organization data necessary to coordinate electronics donation pickups, manage team
+        membership, and track compliance. During upcoming milestones the backend will expose REST endpoints secured by
+        JWT and role-based access controls.
+      </p>
+      <h3 class="h5 mt-4">Data We Plan to Collect</h3>
+      <ul class="text-muted">
+        <li>Account details (name, email, hashed passwords, role assignments).</li>
+        <li>Pickup logistics (locations, time windows, confirmed items).</li>
+        <li>Team membership and application history.</li>
+        <li>Activity logs for auditing and issue resolution.</li>
+      </ul>
+      <p class="text-muted">
+        The backend will rely on MySQL with PDO prepared statements. FlightPHP middleware will enforce JWT verification
+        and scoped access to protect personally identifiable information. For Milestone 1 only static data is stored in
+        the browser.
+      </p>
+      <p class="small text-muted mb-0">Last updated: January 2025</p>
+    </div>
+  </div>
+</section>

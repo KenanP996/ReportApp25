@@ -1,0 +1,72 @@
+<section class="row gy-4">
+  <div class="col-12 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="avatar-ring mx-auto mb-3" style="width: 96px; height: 96px; font-size: 2rem;">AR</div>
+        <h2 class="h4 mb-1">Alex Rivera</h2>
+        <p class="text-muted mb-3">Regional Manager</p>
+        <button class="btn btn-primary w-100 mb-2">Edit Profile</button>
+        <button class="btn btn-outline-secondary w-100">Update Password</button>
+      </div>
+      <div class="card-footer bg-transparent">
+        <p class="small text-muted mb-1">Primary Team</p>
+        <p class="fw-semibold mb-2">West Coast Leads</p>
+        <p class="small text-muted mb-1">Preferred Contact</p>
+        <p class="fw-semibold mb-0">alex.rivera@reportapp.ca</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="h5 mb-3">Multi-Role Access</h3>
+        <p class="text-muted">
+          ReportApp25 supports two core roles out-of-the-box: Managers coordinate organization-wide reports and
+          access analytics, while Team Leads oversee local pickups and team onboarding.
+        </p>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <h4 class="h6 text-muted text-uppercase">Manager</h4>
+              <p class="small mb-0">
+                Access to CRUD operations for companies, reports, and pickups, plus cross-region dashboards.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <h4 class="h6 text-muted text-uppercase">Team Lead</h4>
+              <p class="small mb-0">
+                Handles team membership, approves pickup tickets, and manages on-site operations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h3 class="h5 mb-0">Recent Activity</h3>
+            <p class="text-muted small mb-0">Audit trail for the authenticated user.</p>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm">Download Log</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Action</th>
+                <th scope="col">Role Context</th>
+              </tr>
+            </thead>
+            <tbody id="activity-history"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
