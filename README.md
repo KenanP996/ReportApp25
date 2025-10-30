@@ -2,7 +2,7 @@
 
 ReportApp25 is a single-page operations dashboard that will help regional managers coordinate electronics donation pickups across Canada. The backend will be powered by FlightPHP and MySQL, while the frontend uses vanilla JavaScript, Bootstrap 5, and Chart.js.
 
-This repository tracks Milestone 1 of the project plan: establishing the structure, producing a static SPA prototype, and outlining the relational model.
+This repository currently reflects Milestone 2 of the project plan: the static SPA from Milestone 1 plus a MySQL schema, PDO-backed DAO layer, and CRUD REST endpoints for the five core entities.
 
 ## Repository Layout
 
@@ -12,7 +12,7 @@ ReportApp25/
 │  ├─ public/index.php        # FlightPHP entry point
 │  ├─ routes/                 # REST route definitions
 │  ├─ services/               # Business logic layer (placeholder)
-│  ├─ dao/                    # PDO-based data access classes (placeholder)
+│  ├─ dao/                    # PDO-based data access classes
 │  ├─ config/                 # Bootstrap + environment loading
 │  ├─ src/                    # Namespaced PHP classes
 │  ├─ tests/                  # PHPUnit scaffolding
@@ -24,7 +24,8 @@ ReportApp25/
 │  ├─ views/                  # HTML fragments for each feature/page
 │  └─ assets/logo.svg
 ├─ docs/
-│  └─ ERD.md                  # Draft entity relationship diagram (Mermaid)
+│  ├─ ERD.md                  # Draft entity relationship diagram (Mermaid)
+│  └─ schema.sql              # MySQL DDL used for Milestone 2
 └─ scripts/                   # Reserved for tooling helpers
 ```
 
@@ -36,20 +37,15 @@ ReportApp25/
 - Visualizes placeholder metrics using Chart.js.
 - Includes mock data that reflects the planned entities and roles (Manager, Team Lead).
 
-## Backend Scaffold (Milestone 1)
+## Backend Progress (Milestone 2)
 
-- Bootstraps FlightPHP with a `/health` endpoint and configuration container.
-- Defines the directory structure for upcoming services, DAOs, and tests.
-- Supplies `.env.example` to guide environment setup (MySQL + JWT secret).
-- Declares composer dependencies (`mikecao/flight`, `firebase/php-jwt`, `vlucas/phpdotenv`, `phpunit/phpunit`).
+- Loads environment variables with `vlucas/phpdotenv` and provisions a shared PDO instance via FlightPHP.
+- Implements DAO classes (`UserDao`, `TeamDao`, `CompanyDao`, `ReportDao`, `PickupDao`) with reusable CRUD helpers.
+- Exposes REST endpoints under `/api/*` for the five entities, each supporting `GET`, `POST`, `PUT/PATCH`, and `DELETE`.
+- Adds `docs/schema.sql`, which creates the MySQL schema for Users, Teams, Companies, Reports, Pickups, and Team Applications.
 
-## Database Planning
+## What’s Next
 
-The application will manage at least five entities: Users, Teams, Companies, Reports, Pickups, and Team Applications. Relationships and attributes are documented in `docs/ERD.md` via a Mermaid ER diagram.
-
-## Next Steps
-
-1. Run `composer install` inside `backend/` once PHP tooling is available.
-2. Provision a MySQL database matching the ERD and create PDO-powered DAO classes.
-3. Replace frontend mock data with live AJAX calls to the FlightPHP REST API.
-4. Implement JWT-based authentication with role-specific authorization guards.
+1. Seed development data and connect the frontend to the new API via AJAX.
+2. Layer basic validation/authentication, then expand into JWT-based auth per the project brief.
+3. Implement services/tests to cover business rules and DAO interactions.

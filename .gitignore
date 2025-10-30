@@ -1,3 +1,5 @@
 repos
 repos.pub
 playground-reportapp-master
+backend/.env
+backend/vendor/
