@@ -1,6 +1,6 @@
 # ReportApp25 Backend
 
-This folder contains the FlightPHP REST API that will power the ReportApp25 single-page application. Milestone 1 focuses on laying out the project structure and providing a working entry point.
+This folder contains the FlightPHP REST API that powers the ReportApp25 single-page application. Milestone 2 introduces the MySQL-backed DAO layer and CRUD endpoints for the five core entities.
 
 ## Layout
 
@@ -12,8 +12,32 @@ This folder contains the FlightPHP REST API that will power the ReportApp25 sing
 - `src/` – PHP classes namespaced under `ReportApp25\\`.
 - `tests/` – PHP Unit tests to be added in later milestones.
 
-## Next Steps
+## Setup
 
-1. Run `composer install` from this directory to pull in FlightPHP and related dependencies.
-2. Copy `.env.example` to `.env` and fill in database credentials.
-3. Implement database migrations and DAO classes once the schema is finalized.
+1. Install dependencies:
+
+   ```bash
+   composer install
+   ```
+
+2. Copy `.env.example` to `.env` and update the connection details to point at your MySQL instance.
+
+3. Provision the schema by running the statements in `../docs/schema.sql`.
+
+4. Launch a PHP development server (or wire this entry point into Apache/Nginx):
+
+   ```bash
+   php -S localhost:8080 -t public
+   ```
+
+## Available Endpoints
+
+The `/api` namespace now exposes CRUD operations for five entities. Each resource supports `GET`, `POST`, `PUT/PATCH`, and `DELETE`.
+
+- `GET /api/users`
+- `GET /api/teams`
+- `GET /api/companies`
+- `GET /api/reports`
+- `GET /api/pickups`
+
+The POST/PUT/PATCH payload shapes align with the columns defined in `docs/schema.sql`. JSON request bodies are required; validation errors and missing resources return structured JSON messages.
