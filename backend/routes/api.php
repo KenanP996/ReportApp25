@@ -14,22 +14,43 @@ Flight::route('GET /health', static function () {
     ]);
 });
 
-registerCrudRoutes('users', 'dao.users');
-registerCrudRoutes('teams', 'dao.teams');
-registerCrudRoutes('companies', 'dao.companies');
-registerCrudRoutes('reports', 'dao.reports');
-registerCrudRoutes('pickups', 'dao.pickups');
+Flight::route('GET /', static function () {
+    Flight::render('home', [
+        'app' => Flight::get('config')['appName'],
+        'version' => Flight::get('config')['version'],
+    ]);
+});
 
-function registerCrudRoutes(string $resource, string $daoKey): void
+Flight::route('GET /docs', static function () {
+    Flight::render('swagger');
+});
+
+Flight::route('GET /docs/openapi.yaml', static function () {
+    $path = __DIR__ . '/../../docs/openapi.yaml';
+    if (!file_exists($path)) {
+        Flight::halt(404, 'OpenAPI spec not found');
+    }
+    header('Content-Type: application/x-yaml');
+    readfile($path);
+});
+
+registerCrudRoutes('users', 'service.users');
+registerCrudRoutes('teams', 'service.teams');
+registerCrudRoutes('companies', 'service.companies');
+registerCrudRoutes('reports', 'service.reports');
+registerCrudRoutes('pickups', 'service.pickups');
+registerCrudRoutes('team-applications', 'service.team_applications');
+
+function registerCrudRoutes(string $resource, string $serviceKey): void
 {
-    Flight::route(sprintf('GET /api/%s', $resource), static function () use ($daoKey) {
-        $dao = Flight::get($daoKey);
-        Flight::json($dao->all());
+    Flight::route(sprintf('GET /api/%s', $resource), static function () use ($serviceKey) {
+        $service = Flight::get($serviceKey);
+        Flight::json($service->all());
     });
 
-    Flight::route(sprintf('GET /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($daoKey, $resource) {
-        $dao = Flight::get($daoKey);
-        $entity = $dao->find($id);
+    Flight::route(sprintf('GET /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($serviceKey, $resource) {
+        $service = Flight::get($serviceKey);
+        $entity = $service->find($id);
 
         if ($entity === null) {
             respondNotFound($resource, $id);
@@ -38,24 +59,24 @@ function registerCrudRoutes(string $resource, string $daoKey): void
         Flight::json($entity);
     });
 
-    Flight::route(sprintf('POST /api/%s', $resource), static function () use ($daoKey) {
-        $dao = Flight::get($daoKey);
+    Flight::route(sprintf('POST /api/%s', $resource), static function () use ($serviceKey) {
+        $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
         try {
-            $created = $dao->create($payload);
+            $created = $service->create($payload);
             Flight::json($created, 201);
         } catch (Throwable $throwable) {
             respondWithError($throwable);
         }
     });
 
-    $updateHandler = static function (int $id) use ($daoKey, $resource) {
-        $dao = Flight::get($daoKey);
+    $updateHandler = static function (int $id) use ($serviceKey, $resource) {
+        $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
         try {
-            $updated = $dao->update($id, $payload);
+            $updated = $service->update($id, $payload);
 
             if ($updated === null) {
                 respondNotFound($resource, $id);
@@ -70,15 +91,15 @@ function registerCrudRoutes(string $resource, string $daoKey): void
     Flight::route(sprintf('PUT /api/%s/@id:[0-9]+', $resource), $updateHandler);
     Flight::route(sprintf('PATCH /api/%s/@id:[0-9]+', $resource), $updateHandler);
 
-    Flight::route(sprintf('DELETE /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($daoKey, $resource) {
-        $dao = Flight::get($daoKey);
-        $existing = $dao->find($id);
+    Flight::route(sprintf('DELETE /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($serviceKey, $resource) {
+        $service = Flight::get($serviceKey);
+        $existing = $service->find($id);
 
         if ($existing === null) {
             respondNotFound($resource, $id);
         }
 
-        $dao->delete($id);
+        $service->delete($id);
 
         Flight::json(['status' => 'deleted']);
     });

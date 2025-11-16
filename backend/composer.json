@@ -10,7 +10,8 @@
     "autoload": {
         "psr-4": {
             "ReportApp25\\": "src/",
-            "ReportApp25\\Dao\\": "dao/"
+            "ReportApp25\\Dao\\": "dao/",
+            "ReportApp25\\Services\\": "services/"
         }
     },
     "require-dev": {

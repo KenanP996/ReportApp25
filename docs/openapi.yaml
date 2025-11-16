@@ -1,0 +1,884 @@
+openapi: 3.0.3
+info:
+  title: ReportApp25 API
+  version: '0.3.0'
+  description: |
+    FlightPHP-based REST API powering ReportApp25. This milestone delivers CRUD for users, teams, companies, reports, pickups, and team applications.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/users:
+    get:
+      summary: List users
+      responses:
+        '200':
+          description: Array of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/users/{id}:
+    get:
+      summary: Get user
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace user
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      summary: Update user
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete user
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/teams:
+    get:
+      summary: List teams
+      responses:
+        '200':
+          description: Array of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+    post:
+      summary: Create team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamCreate'
+      responses:
+        '201':
+          description: Created team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+  /api/teams/{id}:
+    get:
+      summary: Get team
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace team
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamUpdate'
+      responses:
+        '200':
+          description: Updated team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+    patch:
+      summary: Update team
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamUpdate'
+      responses:
+        '200':
+          description: Updated team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+    delete:
+      summary: Delete team
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/companies:
+    get:
+      summary: List companies
+      responses:
+        '200':
+          description: Array of companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+    post:
+      summary: Create company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyCreate'
+      responses:
+        '201':
+          description: Created company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+  /api/companies/{id}:
+    get:
+      summary: Get company
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace company
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpdate'
+      responses:
+        '200':
+          description: Updated company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+    patch:
+      summary: Update company
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpdate'
+      responses:
+        '200':
+          description: Updated company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+    delete:
+      summary: Delete company
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/reports:
+    get:
+      summary: List reports
+      responses:
+        '200':
+          description: Array of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+    post:
+      summary: Create report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCreate'
+      responses:
+        '201':
+          description: Created report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+  /api/reports/{id}:
+    get:
+      summary: Get report
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace report
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportUpdate'
+      responses:
+        '200':
+          description: Updated report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+    patch:
+      summary: Update report
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportUpdate'
+      responses:
+        '200':
+          description: Updated report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+    delete:
+      summary: Delete report
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/pickups:
+    get:
+      summary: List pickups
+      responses:
+        '200':
+          description: Array of pickups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pickup'
+    post:
+      summary: Create pickup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupCreate'
+      responses:
+        '201':
+          description: Created pickup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pickup'
+  /api/pickups/{id}:
+    get:
+      summary: Get pickup
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Pickup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pickup'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace pickup
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupUpdate'
+      responses:
+        '200':
+          description: Updated pickup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pickup'
+    patch:
+      summary: Update pickup
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupUpdate'
+      responses:
+        '200':
+          description: Updated pickup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pickup'
+    delete:
+      summary: Delete pickup
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/team-applications:
+    get:
+      summary: List team applications
+      responses:
+        '200':
+          description: Array of applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamApplication'
+    post:
+      summary: Create team application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamApplicationCreate'
+      responses:
+        '201':
+          description: Created application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamApplication'
+  /api/team-applications/{id}:
+    get:
+      summary: Get team application
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamApplication'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace team application
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamApplicationUpdate'
+      responses:
+        '200':
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamApplication'
+    patch:
+      summary: Update team application
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamApplicationUpdate'
+      responses:
+        '200':
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamApplication'
+    delete:
+      summary: Delete team application
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+  schemas:
+    DeleteResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: deleted
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        full_name:
+          type: string
+        role:
+          type: string
+          enum: [manager, team_lead]
+        team_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    UserCreate:
+      type: object
+      required: [email, password_hash, full_name]
+      properties:
+        email:
+          type: string
+        password_hash:
+          type: string
+          description: Hashed password for milestone scope
+        full_name:
+          type: string
+        role:
+          type: string
+          enum: [manager, team_lead]
+        team_id:
+          type: integer
+          nullable: true
+    UserUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+        password_hash:
+          type: string
+        full_name:
+          type: string
+        role:
+          type: string
+          enum: [manager, team_lead]
+        team_id:
+          type: integer
+          nullable: true
+
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        region:
+          type: string
+        manager_id:
+          type: integer
+    TeamCreate:
+      type: object
+      required: [name, region, manager_id]
+      properties:
+        name:
+          type: string
+        region:
+          type: string
+        manager_id:
+          type: integer
+    TeamUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        region:
+          type: string
+        manager_id:
+          type: integer
+
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        province:
+          type: string
+        city:
+          type: string
+        contact_name:
+          type: string
+        contact_email:
+          type: string
+        contact_phone:
+          type: string
+          nullable: true
+        onboarding_date:
+          type: string
+          format: date
+    CompanyCreate:
+      type: object
+      required: [name, province, city, contact_name, contact_email, onboarding_date]
+      properties:
+        name:
+          type: string
+        province:
+          type: string
+        city:
+          type: string
+        contact_name:
+          type: string
+        contact_email:
+          type: string
+        contact_phone:
+          type: string
+        onboarding_date:
+          type: string
+          format: date
+    CompanyUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        province:
+          type: string
+        city:
+          type: string
+        contact_name:
+          type: string
+        contact_email:
+          type: string
+        contact_phone:
+          type: string
+        onboarding_date:
+          type: string
+          format: date
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+        company_id:
+          type: integer
+        submitted_by:
+          type: integer
+        status:
+          type: string
+          enum: [draft, submitted, approved, rejected]
+        total_items:
+          type: integer
+        item_breakdown:
+          type: object
+        submitted_at:
+          type: string
+          format: date-time
+    ReportCreate:
+      type: object
+      required: [company_id, submitted_by, item_breakdown]
+      properties:
+        company_id:
+          type: integer
+        submitted_by:
+          type: integer
+        status:
+          type: string
+          enum: [draft, submitted, approved, rejected]
+        total_items:
+          type: integer
+        item_breakdown:
+          type: object
+        submitted_at:
+          type: string
+          format: date-time
+    ReportUpdate:
+      type: object
+      properties:
+        company_id:
+          type: integer
+        submitted_by:
+          type: integer
+        status:
+          type: string
+          enum: [draft, submitted, approved, rejected]
+        total_items:
+          type: integer
+        item_breakdown:
+          type: object
+        submitted_at:
+          type: string
+          format: date-time
+
+    Pickup:
+      type: object
+      properties:
+        id:
+          type: integer
+        report_id:
+          type: integer
+        scheduled_by:
+          type: integer
+        pickup_window_start:
+          type: string
+          format: date-time
+        pickup_window_end:
+          type: string
+          format: date-time
+        location:
+          type: string
+        status:
+          type: string
+          enum: [pending, scheduled, completed, cancelled]
+    PickupCreate:
+      type: object
+      required: [report_id, scheduled_by, pickup_window_start, pickup_window_end, location]
+      properties:
+        report_id:
+          type: integer
+        scheduled_by:
+          type: integer
+        pickup_window_start:
+          type: string
+          format: date-time
+        pickup_window_end:
+          type: string
+          format: date-time
+        location:
+          type: string
+        status:
+          type: string
+          enum: [pending, scheduled, completed, cancelled]
+    PickupUpdate:
+      type: object
+      properties:
+        report_id:
+          type: integer
+        scheduled_by:
+          type: integer
+        pickup_window_start:
+          type: string
+          format: date-time
+        pickup_window_end:
+          type: string
+          format: date-time
+        location:
+          type: string
+        status:
+          type: string
+          enum: [pending, scheduled, completed, cancelled]
+
+    TeamApplication:
+      type: object
+      properties:
+        id:
+          type: integer
+        team_id:
+          type: integer
+        applicant_email:
+          type: string
+        applicant_name:
+          type: string
+        status:
+          type: string
+          enum: [pending, interview, approved, denied]
+        notes:
+          type: string
+          nullable: true
+        reviewer_id:
+          type: integer
+          nullable: true
+        submitted_at:
+          type: string
+          format: date-time
+        reviewed_at:
+          type: string
+          format: date-time
+          nullable: true
+    TeamApplicationCreate:
+      type: object
+      required: [team_id, applicant_email, applicant_name]
+      properties:
+        team_id:
+          type: integer
+        applicant_email:
+          type: string
+        applicant_name:
+          type: string
+        status:
+          type: string
+          enum: [pending, interview, approved, denied]
+        notes:
+          type: string
+    TeamApplicationUpdate:
+      type: object
+      properties:
+        team_id:
+          type: integer
+        applicant_email:
+          type: string
+        applicant_name:
+          type: string
+        status:
+          type: string
+          enum: [pending, interview, approved, denied]
+        notes:
+          type: string
+        reviewer_id:
+          type: integer
+        reviewed_at:
+          type: string
+          format: date-time

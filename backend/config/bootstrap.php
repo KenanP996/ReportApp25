@@ -10,7 +10,14 @@ use ReportApp25\Dao\CompanyDao;
 use ReportApp25\Dao\PickupDao;
 use ReportApp25\Dao\ReportDao;
 use ReportApp25\Dao\TeamDao;
+use ReportApp25\Dao\TeamApplicationDao;
 use ReportApp25\Dao\UserDao;
+use ReportApp25\Services\CompanyService;
+use ReportApp25\Services\PickupService;
+use ReportApp25\Services\ReportService;
+use ReportApp25\Services\TeamApplicationService;
+use ReportApp25\Services\TeamService;
+use ReportApp25\Services\UserService;
 
 $baseDir = dirname(__DIR__);
 
@@ -33,6 +40,7 @@ $config = [
 ];
 
 Flight::set('config', $config);
+Flight::set('flight.views.path', __DIR__ . '/../views');
 
 Flight::map('pdo', static function () use ($config): PDO {
     static $pdo = null;
@@ -119,4 +127,74 @@ Flight::map('dao.pickups', static function () {
     $dao = new PickupDao(Flight::pdo());
 
     return $dao;
+});
+
+Flight::map('dao.team_applications', static function () {
+    static $dao = null;
+    if ($dao instanceof TeamApplicationDao) {
+        return $dao;
+    }
+    $dao = new TeamApplicationDao(Flight::pdo());
+
+    return $dao;
+});
+
+Flight::map('service.users', static function () {
+    static $service = null;
+    if ($service instanceof UserService) {
+        return $service;
+    }
+    $service = new UserService(Flight::get('dao.users'));
+
+    return $service;
+});
+
+Flight::map('service.teams', static function () {
+    static $service = null;
+    if ($service instanceof TeamService) {
+        return $service;
+    }
+    $service = new TeamService(Flight::get('dao.teams'));
+
+    return $service;
+});
+
+Flight::map('service.companies', static function () {
+    static $service = null;
+    if ($service instanceof CompanyService) {
+        return $service;
+    }
+    $service = new CompanyService(Flight::get('dao.companies'));
+
+    return $service;
+});
+
+Flight::map('service.reports', static function () {
+    static $service = null;
+    if ($service instanceof ReportService) {
+        return $service;
+    }
+    $service = new ReportService(Flight::get('dao.reports'));
+
+    return $service;
+});
+
+Flight::map('service.pickups', static function () {
+    static $service = null;
+    if ($service instanceof PickupService) {
+        return $service;
+    }
+    $service = new PickupService(Flight::get('dao.pickups'));
+
+    return $service;
+});
+
+Flight::map('service.team_applications', static function () {
+    static $service = null;
+    if ($service instanceof TeamApplicationService) {
+        return $service;
+    }
+    $service = new TeamApplicationService(Flight::get('dao.team_applications'));
+
+    return $service;
 });

@@ -1,14 +1,15 @@
 # ReportApp25 Backend
 
-This folder contains the FlightPHP REST API that powers the ReportApp25 single-page application. Milestone 2 introduces the MySQL-backed DAO layer and CRUD endpoints for the five core entities.
+This folder contains the FlightPHP REST API that powers the ReportApp25 single-page application. Milestone 3 adds service-layer validation, presentation views, and OpenAPI documentation on top of the CRUD endpoints.
 
 ## Layout
 
 - `public/index.php` – Boots Flight, registers routes, and will expose REST endpoints.
-- `routes/` – Route definitions grouped by feature (auth, reports, teams, etc.).
-- `services/` – Business logic layers that coordinate DAOs and other helpers.
+- `routes/` – Route definitions grouped by feature.
+- `services/` – Business logic layers that coordinate DAOs and perform validation.
 - `dao/` – DAO classes that wrap PDO queries for MySQL.
 - `config/` – Bootstrap configuration, environment loading, and shared settings.
+- `views/` – Presentation templates served by Flight (home + Swagger UI).
 - `src/` – PHP classes namespaced under `ReportApp25\\`.
 - `tests/` – PHP Unit tests to be added in later milestones.
 
@@ -30,14 +31,11 @@ This folder contains the FlightPHP REST API that powers the ReportApp25 single-p
    php -S localhost:8080 -t public
    ```
 
-## Available Endpoints
+## Features (Milestone 3)
 
-The `/api` namespace now exposes CRUD operations for five entities. Each resource supports `GET`, `POST`, `PUT/PATCH`, and `DELETE`.
+- Services with validation for Users, Teams, Companies, Reports, Pickups, and Team Applications.
+- CRUD endpoints under `/api/*` for all six entities (users, teams, companies, reports, pickups, team applications).
+- Presentation layer at `/` (endpoint summary) and `/docs` (Swagger UI fed by `docs/openapi.yaml`).
+- OpenAPI 3.0 spec located at `../docs/openapi.yaml`; also served at `/docs/openapi.yaml`.
 
-- `GET /api/users`
-- `GET /api/teams`
-- `GET /api/companies`
-- `GET /api/reports`
-- `GET /api/pickups`
-
-The POST/PUT/PATCH payload shapes align with the columns defined in `docs/schema.sql`. JSON request bodies are required; validation errors and missing resources return structured JSON messages.
+JSON request bodies are required for write operations. Validation errors and missing resources return structured JSON messages.

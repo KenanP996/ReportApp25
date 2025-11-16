@@ -2,7 +2,7 @@
 
 ReportApp25 is a single-page operations dashboard that will help regional managers coordinate electronics donation pickups across Canada. The backend will be powered by FlightPHP and MySQL, while the frontend uses vanilla JavaScript, Bootstrap 5, and Chart.js.
 
-This repository currently reflects Milestone 2 of the project plan: the static SPA from Milestone 1 plus a MySQL schema, PDO-backed DAO layer, and CRUD REST endpoints for the five core entities.
+This repository currently reflects Milestone 3 of the project plan: the static SPA from Milestone 1, a MySQL schema and DAO layer from Milestone 2, plus service-layer validation, presentation routes, and OpenAPI documentation.
 
 ## Repository Layout
 
@@ -11,7 +11,7 @@ ReportApp25/
 ├─ backend/
 │  ├─ public/index.php        # FlightPHP entry point
 │  ├─ routes/                 # REST route definitions
-│  ├─ services/               # Business logic layer (placeholder)
+│  ├─ services/               # Business logic layer (validation + orchestration)
 │  ├─ dao/                    # PDO-based data access classes
 │  ├─ config/                 # Bootstrap + environment loading
 │  ├─ src/                    # Namespaced PHP classes
@@ -25,7 +25,8 @@ ReportApp25/
 │  └─ assets/logo.svg
 ├─ docs/
 │  ├─ ERD.md                  # Draft entity relationship diagram (Mermaid)
-│  └─ schema.sql              # MySQL DDL used for Milestone 2
+│  ├─ schema.sql              # MySQL DDL used for Milestone 2
+│  └─ openapi.yaml            # OpenAPI 3 spec (Milestone 3)
 └─ scripts/                   # Reserved for tooling helpers
 ```
 
@@ -37,15 +38,16 @@ ReportApp25/
 - Visualizes placeholder metrics using Chart.js.
 - Includes mock data that reflects the planned entities and roles (Manager, Team Lead).
 
-## Backend Progress (Milestone 2)
+## Backend Progress (Milestone 3)
 
-- Loads environment variables with `vlucas/phpdotenv` and provisions a shared PDO instance via FlightPHP.
-- Implements DAO classes (`UserDao`, `TeamDao`, `CompanyDao`, `ReportDao`, `PickupDao`) with reusable CRUD helpers.
-- Exposes REST endpoints under `/api/*` for the five entities, each supporting `GET`, `POST`, `PUT/PATCH`, and `DELETE`.
-- Adds `docs/schema.sql`, which creates the MySQL schema for Users, Teams, Companies, Reports, Pickups, and Team Applications.
+- Environment + PDO bootstrap via FlightPHP and `vlucas/phpdotenv`.
+- DAO classes for Users, Teams, Companies, Reports, Pickups, and Team Applications, plus service-layer validation.
+- CRUD endpoints under `/api/*` for all entities, driven by the services.
+- Presentation layer routes at `/` (endpoint summary) and `/docs` (Swagger UI reading `docs/openapi.yaml`).
+- Documentation artifacts: ERD, schema SQL, and OpenAPI 3 spec.
 
 ## What’s Next
 
-1. Seed development data and connect the frontend to the new API via AJAX.
-2. Layer basic validation/authentication, then expand into JWT-based auth per the project brief.
-3. Implement services/tests to cover business rules and DAO interactions.
+1. Seed development data and connect the SPA to the live API with AJAX.
+2. Add authentication/authorization (JWT) and tighter request validation.
+3. Grow test coverage around services and routes.

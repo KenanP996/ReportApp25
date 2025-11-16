@@ -9,5 +9,6 @@ The DAO layer encapsulates all database access using PDO prepared statements. Ea
 - `CompanyDao` – Manages `companies` (contact details, onboarding date).
 - `ReportDao` – Manages `reports` and converts the JSON `item_breakdown` column to/from native arrays.
 - `PickupDao` – Manages `pickups` (schedule window, status, linked reports).
+- `TeamApplicationDao` – Manages `team_applications` (status, reviewer, notes).
 
 Additional DAOs (e.g., `TeamApplicationDao`) can be added by extending `BaseDao` and declaring the `$table` plus any fillable columns.
