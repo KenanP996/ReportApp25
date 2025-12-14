@@ -28,7 +28,7 @@ ReportApp25/
 │  ├─ schema.sql              # MySQL DDL used for Milestone 2
 │  └─ openapi.yaml            # OpenAPI 3 spec (Milestone 3+)
 ├─ docker-compose.yml         # Local/dev deployment stack (MySQL, backend, frontend)
-└─ scripts/                   # Reserved for tooling helpers
+└─ scripts/                   # Tooling helpers (deploy.sh, seed-manager.php)
 ```
 
 ## Frontend Prototype (Milestone 1)
@@ -64,7 +64,7 @@ docker-compose up --build
 
 Backend Docker env example: `backend/.env.docker.example` (adjust secrets in a real deployment).
 
-Live URL: _replace-with-your-deployed-domain_.
+Live URL: https://project.noxfleet.org (SPA + proxied API under the same domain).
 
 ## What’s Next
 
