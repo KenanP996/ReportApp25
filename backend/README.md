@@ -1,6 +1,6 @@
 # ReportApp25 Backend
 
-This folder contains the FlightPHP REST API that powers the ReportApp25 single-page application. Milestone 4 adds authentication, JWT middleware, and role-aware guards on top of the CRUD endpoints.
+This folder contains the FlightPHP REST API that powers the ReportApp25 single-page application. Milestone 5 adds deployment assets, frontend integration, and validation refinements on top of the authenticated, role-aware CRUD API.
 
 ## Layout
 
@@ -31,12 +31,13 @@ This folder contains the FlightPHP REST API that powers the ReportApp25 single-p
    php -S localhost:8080 -t public
    ```
 
-## Features (Milestone 4)
+## Features (Milestone 5)
 
 - Services with validation for Users, Teams, Companies, Reports, Pickups, and Team Applications.
 - JWT authentication with `/api/auth/register`, `/api/auth/login`, `/api/auth/me`, and middleware helpers (`requireAuth`, `requireRole`).
 - Role-based CRUD: managers can create/update/delete; authenticated users can read.
 - Presentation layer at `/` (endpoint summary) and `/docs` (Swagger UI fed by `docs/openapi.yaml`).
 - OpenAPI 3.0 spec located at `../docs/openapi.yaml`; also served at `/docs/openapi.yaml`.
+- Deployment assets: backend Dockerfile, docker-compose.yml, `.env.docker.example`.
 
 JSON request bodies are required for write operations. Validation errors and missing resources return structured JSON messages; unauthorized/forbidden access yields 401/403 responses.

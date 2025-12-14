@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ReportApp25 API
-  version: '0.4.0'
+  version: '0.5.0'
   description: |
     FlightPHP-based REST API powering ReportApp25. This milestone delivers CRUD for users, teams, companies, reports, pickups, and team applications.
 servers:

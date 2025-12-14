@@ -20,6 +20,9 @@ class UserService extends BaseService
     {
         $this->requireFields($data, ['email', 'password', 'full_name']);
         $this->validateEmail('email', $data['email']);
+        if (strlen((string) $data['password']) < 8) {
+            throw new \InvalidArgumentException('Password must be at least 8 characters long');
+        }
         $data['role'] = $this->normalizeRole($data['role'] ?? 'team_lead');
         $data['password_hash'] = $this->hashPassword($data['password']);
         unset($data['password']);
@@ -42,6 +45,9 @@ class UserService extends BaseService
         }
 
         if (isset($data['password']) && is_string($data['password']) && $data['password'] !== '') {
+            if (strlen($data['password']) < 8) {
+                throw new \InvalidArgumentException('Password must be at least 8 characters long');
+            }
             $data['password_hash'] = $this->hashPassword($data['password']);
             unset($data['password']);
         }
