@@ -34,6 +34,48 @@ Flight::route('GET /docs/openapi.yaml', static function () {
     readfile($path);
 });
 
+Flight::route('POST /api/auth/register', static function () {
+    $service = Flight::get('service.users');
+    $payload = getJsonPayload();
+    $payload['role'] = 'team_lead'; // public registration is limited to team leads
+
+    try {
+        $created = $service->create($payload);
+        $token = issueToken($created);
+        Flight::json(['token' => $token, 'user' => $created], 201);
+    } catch (Throwable $throwable) {
+        respondWithError($throwable);
+    }
+});
+
+Flight::route('POST /api/auth/login', static function () {
+    $payload = getJsonPayload();
+    $email = $payload['email'] ?? null;
+    $password = $payload['password'] ?? null;
+
+    if (!is_string($email) || !is_string($password)) {
+        Flight::halt(400, json_encode(['error' => 'Email and password are required']));
+    }
+
+    /** @var \ReportApp25\Services\UserService $service */
+    $service = Flight::get('service.users');
+    $userWithPassword = $service->findWithPassword($email);
+
+    if ($userWithPassword === null || !password_verify($password, $userWithPassword['password_hash'])) {
+        Flight::halt(401, json_encode(['error' => 'Invalid credentials']));
+    }
+
+    unset($userWithPassword['password_hash']);
+
+    $token = issueToken($userWithPassword);
+    Flight::json(['token' => $token, 'user' => $userWithPassword]);
+});
+
+Flight::route('GET /api/auth/me', static function () {
+    $user = requireAuth();
+    Flight::json(['user' => $user]);
+});
+
 registerCrudRoutes('users', 'service.users');
 registerCrudRoutes('teams', 'service.teams');
 registerCrudRoutes('companies', 'service.companies');
@@ -44,11 +86,13 @@ registerCrudRoutes('team-applications', 'service.team_applications');
 function registerCrudRoutes(string $resource, string $serviceKey): void
 {
     Flight::route(sprintf('GET /api/%s', $resource), static function () use ($serviceKey) {
+        requireAuth();
         $service = Flight::get($serviceKey);
         Flight::json($service->all());
     });
 
     Flight::route(sprintf('GET /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($serviceKey, $resource) {
+        requireAuth();
         $service = Flight::get($serviceKey);
         $entity = $service->find($id);
 
@@ -60,6 +104,7 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     });
 
     Flight::route(sprintf('POST /api/%s', $resource), static function () use ($serviceKey) {
+        requireRole(['manager']);
         $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
@@ -72,6 +117,7 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     });
 
     $updateHandler = static function (int $id) use ($serviceKey, $resource) {
+        requireRole(['manager']);
         $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
@@ -92,6 +138,7 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     Flight::route(sprintf('PATCH /api/%s/@id:[0-9]+', $resource), $updateHandler);
 
     Flight::route(sprintf('DELETE /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($serviceKey, $resource) {
+        requireRole(['manager']);
         $service = Flight::get($serviceKey);
         $existing = $service->find($id);
 

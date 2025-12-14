@@ -27,7 +27,7 @@ if (class_exists(Dotenv::class) && file_exists($baseDir . '/.env')) {
 
 $config = [
     'appName' => 'ReportApp25',
-    'version' => '0.2.0-m2',
+    'version' => '0.4.0-m4',
     'db' => [
         'driver' => $_ENV['DB_DRIVER'] ?? 'mysql',
         'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
@@ -36,6 +36,11 @@ $config = [
         'username' => $_ENV['DB_USER'] ?? 'reportapp_user',
         'password' => $_ENV['DB_PASS'] ?? '',
         'charset' => $_ENV['DB_CHARSET'] ?? 'utf8mb4',
+    ],
+    'jwt' => [
+        'secret' => $_ENV['JWT_SECRET'] ?? 'change-this-secret',
+        'issuer' => $_ENV['JWT_ISSUER'] ?? 'reportapp25',
+        'ttl' => (int) ($_ENV['JWT_TTL'] ?? 3600),
     ],
 ];
 

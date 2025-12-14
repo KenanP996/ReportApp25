@@ -1,0 +1,84 @@
+<section>
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <div>
+      <p class="text-uppercase small text-muted mb-1">Admin Panel</p>
+      <h2 class="h4 mb-1">Organization Controls</h2>
+      <p class="text-muted mb-0">
+        Manage users, teams, and operational data. Only managers can see and use these controls.
+      </p>
+    </div>
+    <div class="mt-3 mt-md-0">
+      <span class="badge bg-primary" id="admin-role-badge">Manager</span>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4" id="admin-stat-cards">
+    <div class="col-6 col-lg-3">
+      <div class="p-3 bg-light rounded-3 h-100">
+        <p class="small text-uppercase text-muted mb-1">Users</p>
+        <p class="h3 mb-0" id="admin-users-count">0</p>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="p-3 bg-light rounded-3 h-100">
+        <p class="small text-uppercase text-muted mb-1">Teams</p>
+        <p class="h3 mb-0" id="admin-teams-count">0</p>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="p-3 bg-light rounded-3 h-100">
+        <p class="small text-uppercase text-muted mb-1">Reports</p>
+        <p class="h3 mb-0" id="admin-reports-count">0</p>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="p-3 bg-light rounded-3 h-100">
+        <p class="small text-uppercase text-muted mb-1">Pickups</p>
+        <p class="h3 mb-0" id="admin-pickups-count">0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h3 class="h5 mb-0">User Directory</h3>
+              <p class="text-muted small mb-0">Managers can add or remove accounts.</p>
+            </div>
+            <button class="btn btn-sm btn-primary" id="admin-add-user-btn">Create User</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0" id="admin-users-table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Team</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h3 class="h5 mb-0">Latest Reports</h3>
+              <p class="text-muted small mb-0">Status of the most recent submissions.</p>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" id="admin-refresh-btn">Refresh</button>
+          </div>
+          <ul class="list-group list-group-flush" id="admin-report-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

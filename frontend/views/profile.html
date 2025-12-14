@@ -2,17 +2,19 @@
   <div class="col-12 col-lg-4">
     <div class="card h-100">
       <div class="card-body text-center">
-        <div class="avatar-ring mx-auto mb-3" style="width: 96px; height: 96px; font-size: 2rem;">AR</div>
-        <h2 class="h4 mb-1">Alex Rivera</h2>
-        <p class="text-muted mb-3">Regional Manager</p>
-        <button class="btn btn-primary w-100 mb-2">Edit Profile</button>
-        <button class="btn btn-outline-secondary w-100">Update Password</button>
+        <div class="avatar-ring mx-auto mb-3" style="width: 96px; height: 96px; font-size: 2rem;" id="profile-avatar">
+          --
+        </div>
+        <h2 class="h4 mb-1" id="profile-name">Signed Out</h2>
+        <p class="text-muted mb-3" id="profile-role">Authenticate to view profile</p>
+        <button class="btn btn-primary w-100 mb-2" id="profile-refresh-btn">Refresh Profile</button>
+        <button class="btn btn-outline-secondary w-100" id="profile-logout-btn">Sign Out</button>
       </div>
       <div class="card-footer bg-transparent">
         <p class="small text-muted mb-1">Primary Team</p>
-        <p class="fw-semibold mb-2">West Coast Leads</p>
+        <p class="fw-semibold mb-2" id="profile-team">—</p>
         <p class="small text-muted mb-1">Preferred Contact</p>
-        <p class="fw-semibold mb-0">alex.rivera@reportapp.ca</p>
+        <p class="fw-semibold mb-0" id="profile-email">—</p>
       </div>
     </div>
   </div>

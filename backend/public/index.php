@@ -8,6 +8,7 @@ use Flight;
 
 // Bootstrap shared services; currently a placeholder for future milestones.
 require_once __DIR__ . '/../config/bootstrap.php';
+require_once __DIR__ . '/../config/middleware.php';
 
 // Register API routes.
 require_once __DIR__ . '/../routes/api.php';

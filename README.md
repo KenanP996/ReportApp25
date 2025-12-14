@@ -2,7 +2,7 @@
 
 ReportApp25 is a single-page operations dashboard that will help regional managers coordinate electronics donation pickups across Canada. The backend will be powered by FlightPHP and MySQL, while the frontend uses vanilla JavaScript, Bootstrap 5, and Chart.js.
 
-This repository currently reflects Milestone 3 of the project plan: the static SPA from Milestone 1, a MySQL schema and DAO layer from Milestone 2, plus service-layer validation, presentation routes, and OpenAPI documentation.
+This repository currently reflects Milestone 4 of the project plan: the static SPA from Milestone 1, a MySQL schema and DAO layer from Milestone 2, plus service-layer validation, JWT authentication/authorization, presentation routes, and OpenAPI documentation.
 
 ## Repository Layout
 
@@ -26,7 +26,7 @@ ReportApp25/
 ├─ docs/
 │  ├─ ERD.md                  # Draft entity relationship diagram (Mermaid)
 │  ├─ schema.sql              # MySQL DDL used for Milestone 2
-│  └─ openapi.yaml            # OpenAPI 3 spec (Milestone 3)
+│  └─ openapi.yaml            # OpenAPI 3 spec (Milestone 3+)
 └─ scripts/                   # Reserved for tooling helpers
 ```
 
@@ -38,16 +38,17 @@ ReportApp25/
 - Visualizes placeholder metrics using Chart.js.
 - Includes mock data that reflects the planned entities and roles (Manager, Team Lead).
 
-## Backend Progress (Milestone 3)
+## Backend Progress (Milestone 4)
 
 - Environment + PDO bootstrap via FlightPHP and `vlucas/phpdotenv`.
 - DAO classes for Users, Teams, Companies, Reports, Pickups, and Team Applications, plus service-layer validation.
-- CRUD endpoints under `/api/*` for all entities, driven by the services.
+- JWT auth endpoints (`/api/auth/register`, `/api/auth/login`, `/api/auth/me`) and middleware (`requireAuth`, `requireRole`).
+- CRUD endpoints under `/api/*` for all entities with manager-only mutations and read access for authenticated users.
 - Presentation layer routes at `/` (endpoint summary) and `/docs` (Swagger UI reading `docs/openapi.yaml`).
 - Documentation artifacts: ERD, schema SQL, and OpenAPI 3 spec.
 
 ## What’s Next
 
-1. Seed development data and connect the SPA to the live API with AJAX.
-2. Add authentication/authorization (JWT) and tighter request validation.
-3. Grow test coverage around services and routes.
+1. Seed development data and extend the SPA with richer CRUD forms.
+2. Add production-grade password handling (e.g., peppering/rate-limiting) and refresh tokens.
+3. Grow test coverage around services, routes, and auth flows.
