@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Flight;
 use ReportApp25\Services\UserService;
-use Throwable;
 
 Flight::map('error', static function (Throwable $throwable): void {
     error_log(sprintf(
@@ -34,15 +32,8 @@ Flight::before('start', static function (): void {
 
     error_log(sprintf('[Request] %s %s (%s)', $method, $path, $request->ip));
 
-    if (in_array($method, ['POST', 'PUT', 'PATCH'], true) && str_starts_with($path, '/api/')) {
-        $contentType = $request->headers['Content-Type'] ?? '';
-        if (!str_contains($contentType, 'application/json')) {
-            Flight::halt(415, json_encode([
-                'error' => 'Unsupported Media Type',
-                'message' => 'Requests must use application/json',
-            ]));
-        }
-    }
+    // Content-type enforcement removed temporarily to avoid upstream header stripping
+    // that caused false 415s when proxied. JSON is still expected by route handlers.
 });
 
 /**
@@ -55,12 +46,26 @@ function requireAuth(): array
         return $user;
     }
 
-    $authHeader = Flight::request()->headers['Authorization'] ?? '';
-    if (!preg_match('/Bearer\\s+(.*)$/i', $authHeader, $matches)) {
+    $request = Flight::request();
+    $authHeader = $request->headers['Authorization']
+        ?? $_SERVER['HTTP_AUTHORIZATION']
+        ?? $request->headers['authorization']
+        ?? '';
+
+    $token = null;
+    if (is_string($authHeader) && preg_match('/Bearer\\s+(.*)$/i', $authHeader, $matches)) {
+        $token = trim($matches[1]);
+    }
+
+    // Fallback: allow token in query string if header was stripped by proxies.
+    if ($token === null && isset($request->query['token']) && is_string($request->query['token'])) {
+        $token = $request->query['token'];
+    }
+
+    if ($token === null || $token === '') {
         Flight::halt(401, json_encode(['error' => 'Missing or invalid Authorization header']));
     }
 
-    $token = trim($matches[1]);
     $config = Flight::get('config');
 
     try {

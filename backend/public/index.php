@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Suppress deprecated notices from third-party libraries under PHP 8.x before autoload.
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
-use Flight;
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // Bootstrap shared services; currently a placeholder for future milestones.
 require_once __DIR__ . '/../config/bootstrap.php';

@@ -3,14 +3,11 @@
 declare(strict_types=1);
 
 use Dotenv\Dotenv;
-use Flight;
-use PDO;
-use PDOException;
 use ReportApp25\Dao\CompanyDao;
 use ReportApp25\Dao\PickupDao;
 use ReportApp25\Dao\ReportDao;
-use ReportApp25\Dao\TeamDao;
 use ReportApp25\Dao\TeamApplicationDao;
+use ReportApp25\Dao\TeamDao;
 use ReportApp25\Dao\UserDao;
 use ReportApp25\Services\CompanyService;
 use ReportApp25\Services\PickupService;
@@ -27,7 +24,7 @@ if (class_exists(Dotenv::class) && file_exists($baseDir . '/.env')) {
 
 $config = [
     'appName' => 'ReportApp25',
-    'version' => '0.4.0-m4',
+    'version' => '0.5.0-m5',
     'db' => [
         'driver' => $_ENV['DB_DRIVER'] ?? 'mysql',
         'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
@@ -47,13 +44,7 @@ $config = [
 Flight::set('config', $config);
 Flight::set('flight.views.path', __DIR__ . '/../views');
 
-Flight::map('pdo', static function () use ($config): PDO {
-    static $pdo = null;
-
-    if ($pdo instanceof PDO) {
-        return $pdo;
-    }
-
+try {
     $dsn = sprintf(
         '%s:host=%s;port=%d;dbname=%s;charset=%s',
         $config['db']['driver'],
@@ -62,144 +53,36 @@ Flight::map('pdo', static function () use ($config): PDO {
         $config['db']['database'],
         $config['db']['charset']
     );
+    $pdo = new PDO(
+        $dsn,
+        $config['db']['username'],
+        $config['db']['password'],
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]
+    );
+    Flight::set('pdo', $pdo);
+} catch (PDOException $exception) {
+    Flight::halt(500, json_encode([
+        'error' => 'Database connection failed',
+        'details' => $exception->getMessage(),
+    ]));
+}
 
-    try {
-        $pdo = new PDO(
-            $dsn,
-            $config['db']['username'],
-            $config['db']['password'],
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]
-        );
-    } catch (PDOException $exception) {
-        Flight::halt(500, json_encode([
-            'error' => 'Database connection failed',
-            'details' => $exception->getMessage(),
-        ]));
-    }
+// Register DAOs
+Flight::set('dao.users', new UserDao(Flight::get('pdo')));
+Flight::set('dao.teams', new TeamDao(Flight::get('pdo')));
+Flight::set('dao.companies', new CompanyDao(Flight::get('pdo')));
+Flight::set('dao.reports', new ReportDao(Flight::get('pdo')));
+Flight::set('dao.pickups', new PickupDao(Flight::get('pdo')));
+Flight::set('dao.team_applications', new TeamApplicationDao(Flight::get('pdo')));
 
-    return $pdo;
-});
-
-Flight::map('dao.users', static function () {
-    static $dao = null;
-    if ($dao instanceof UserDao) {
-        return $dao;
-    }
-    $dao = new UserDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('dao.teams', static function () {
-    static $dao = null;
-    if ($dao instanceof TeamDao) {
-        return $dao;
-    }
-    $dao = new TeamDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('dao.companies', static function () {
-    static $dao = null;
-    if ($dao instanceof CompanyDao) {
-        return $dao;
-    }
-    $dao = new CompanyDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('dao.reports', static function () {
-    static $dao = null;
-    if ($dao instanceof ReportDao) {
-        return $dao;
-    }
-    $dao = new ReportDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('dao.pickups', static function () {
-    static $dao = null;
-    if ($dao instanceof PickupDao) {
-        return $dao;
-    }
-    $dao = new PickupDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('dao.team_applications', static function () {
-    static $dao = null;
-    if ($dao instanceof TeamApplicationDao) {
-        return $dao;
-    }
-    $dao = new TeamApplicationDao(Flight::pdo());
-
-    return $dao;
-});
-
-Flight::map('service.users', static function () {
-    static $service = null;
-    if ($service instanceof UserService) {
-        return $service;
-    }
-    $service = new UserService(Flight::get('dao.users'));
-
-    return $service;
-});
-
-Flight::map('service.teams', static function () {
-    static $service = null;
-    if ($service instanceof TeamService) {
-        return $service;
-    }
-    $service = new TeamService(Flight::get('dao.teams'));
-
-    return $service;
-});
-
-Flight::map('service.companies', static function () {
-    static $service = null;
-    if ($service instanceof CompanyService) {
-        return $service;
-    }
-    $service = new CompanyService(Flight::get('dao.companies'));
-
-    return $service;
-});
-
-Flight::map('service.reports', static function () {
-    static $service = null;
-    if ($service instanceof ReportService) {
-        return $service;
-    }
-    $service = new ReportService(Flight::get('dao.reports'));
-
-    return $service;
-});
-
-Flight::map('service.pickups', static function () {
-    static $service = null;
-    if ($service instanceof PickupService) {
-        return $service;
-    }
-    $service = new PickupService(Flight::get('dao.pickups'));
-
-    return $service;
-});
-
-Flight::map('service.team_applications', static function () {
-    static $service = null;
-    if ($service instanceof TeamApplicationService) {
-        return $service;
-    }
-    $service = new TeamApplicationService(Flight::get('dao.team_applications'));
-
-    return $service;
-});
+// Register Services
+Flight::set('service.users', new UserService(Flight::get('dao.users')));
+Flight::set('service.teams', new TeamService(Flight::get('dao.teams')));
+Flight::set('service.companies', new CompanyService(Flight::get('dao.companies')));
+Flight::set('service.reports', new ReportService(Flight::get('dao.reports')));
+Flight::set('service.pickups', new PickupService(Flight::get('dao.pickups')));
+Flight::set('service.team_applications', new TeamApplicationService(Flight::get('dao.team_applications')));

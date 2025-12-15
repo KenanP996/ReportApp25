@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use Flight;
-use InvalidArgumentException;
-use Throwable;
-
 Flight::route('GET /health', static function () {
     Flight::json([
         'status' => 'ok',
@@ -104,7 +100,8 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     });
 
     Flight::route(sprintf('POST /api/%s', $resource), static function () use ($serviceKey) {
-        requireRole(['manager']);
+        // Allow managers and team leads to create
+        requireRole(['manager', 'team_lead']);
         $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
@@ -117,7 +114,8 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     });
 
     $updateHandler = static function (int $id) use ($serviceKey, $resource) {
-        requireRole(['manager']);
+        // Allow managers and team leads to update
+        requireRole(['manager', 'team_lead']);
         $service = Flight::get($serviceKey);
         $payload = getJsonPayload();
 
@@ -138,7 +136,8 @@ function registerCrudRoutes(string $resource, string $serviceKey): void
     Flight::route(sprintf('PATCH /api/%s/@id:[0-9]+', $resource), $updateHandler);
 
     Flight::route(sprintf('DELETE /api/%s/@id:[0-9]+', $resource), static function (int $id) use ($serviceKey, $resource) {
-        requireRole(['manager']);
+        // Allow managers and team leads to delete
+        requireRole(['manager', 'team_lead']);
         $service = Flight::get($serviceKey);
         $existing = $service->find($id);
 
