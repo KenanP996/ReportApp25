@@ -40,6 +40,12 @@
                 <h3 class="h2 mb-0" id="stat-teams">0</h3>
               </div>
             </div>
+            <div class="col-12">
+              <div class="stat-card p-3 rounded bg-light">
+                <p class="text-muted mb-1 small text-uppercase">Total Points</p>
+                <h3 class="h2 mb-0" id="stat-points">0</h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -65,11 +71,39 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Company</th>
+                  <th scope="col">Items</th>
+                  <th scope="col">Points</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Total Items</th>
                 </tr>
               </thead>
               <tbody id="dashboard-reports"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row gy-4 mt-1">
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="h5 mb-3">Items Summary</h3>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <tbody id="dashboard-items"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="h5 mb-3">Status Breakdown</h3>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <tbody id="dashboard-statuses"></tbody>
             </table>
           </div>
         </div>

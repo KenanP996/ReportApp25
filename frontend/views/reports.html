@@ -17,12 +17,12 @@
       <h3 class="h5 mb-3">Create Report</h3>
       <form id="report-form" class="row g-3">
         <div class="col-12 col-md-4">
-          <label for="report-company-id" class="form-label">Company ID</label>
-          <input type="number" class="form-control" id="report-company-id" required />
+          <label for="report-company-id" class="form-label">Company (name or ID)</label>
+          <input type="text" class="form-control" id="report-company-id" placeholder="Acme Inc or ID" />
         </div>
         <div class="col-12 col-md-4">
           <label for="report-total-items" class="form-label">Total Items</label>
-          <input type="number" class="form-control" id="report-total-items" value="0" />
+          <input type="number" class="form-control" id="report-total-items" value="0" readonly />
         </div>
         <div class="col-12 col-md-4">
           <label for="report-status" class="form-label">Status</label>
@@ -33,9 +33,33 @@
             <option value="rejected">Rejected</option>
           </select>
         </div>
-        <div class="col-12">
-          <label for="report-breakdown" class="form-label">Item Breakdown (JSON)</label>
-          <textarea class="form-control" id="report-breakdown" rows="3" placeholder='e.g. {"laptops": 5, "switches": 2}'></textarea>
+        <div class="col-12 col-md-2">
+          <label for="report-num-pcs" class="form-label">PCs</label>
+          <input type="number" class="form-control" id="report-num-pcs" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-num-laptops" class="form-label">Laptops</label>
+          <input type="number" class="form-control" id="report-num-laptops" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-num-surface" class="form-label">Surface</label>
+          <input type="number" class="form-control" id="report-num-surface" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-num-servers" class="form-label">Servers</label>
+          <input type="number" class="form-control" id="report-num-servers" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-num-switchers" class="form-label">Switchers</label>
+          <input type="number" class="form-control" id="report-num-switchers" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-num-hdds" class="form-label">HDDs</label>
+          <input type="number" class="form-control" id="report-num-hdds" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="report-memberships" class="form-label">Memberships</label>
+          <input type="number" class="form-control" id="report-memberships" value="0" />
         </div>
         <div class="col-12 d-flex justify-content-end">
           <button type="submit" class="btn btn-primary">Save Report</button>
@@ -52,9 +76,9 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Company</th>
-              <th scope="col">Status</th>
               <th scope="col">Total Items</th>
-              <th scope="col">Submitted By</th>
+              <th scope="col">Points</th>
+              <th scope="col">Status</th>
               <th scope="col">Submitted At</th>
             </tr>
           </thead>

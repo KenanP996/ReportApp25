@@ -15,6 +15,7 @@ use ReportApp25\Services\ReportService;
 use ReportApp25\Services\TeamApplicationService;
 use ReportApp25\Services\TeamService;
 use ReportApp25\Services\UserService;
+use ReportApp25\Utils\Points;
 
 $baseDir = dirname(__DIR__);
 

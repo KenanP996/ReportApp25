@@ -72,12 +72,48 @@ Flight::route('GET /api/auth/me', static function () {
     Flight::json(['user' => $user]);
 });
 
+// Reports statistics and export
+Flight::route('GET /api/reports/statistics', static function () {
+    requireAuth();
+    $service = Flight::get('service.reports');
+    $stats = $service->statistics();
+    Flight::json($stats);
+});
+
+Flight::route('GET /api/reports/export', static function () {
+    requireAuth();
+    $service = Flight::get('service.reports');
+    $csv = $service->exportCsv();
+    Flight::response()->header('Content-Type', 'text/csv');
+    Flight::response()->header('Content-Disposition', 'attachment; filename="reports.csv"');
+    echo $csv;
+});
+
 registerCrudRoutes('users', 'service.users');
 registerCrudRoutes('teams', 'service.teams');
 registerCrudRoutes('companies', 'service.companies');
 registerCrudRoutes('reports', 'service.reports');
 registerCrudRoutes('pickups', 'service.pickups');
+Flight::route('POST /api/pickups-with-report', static function () {
+    requireRole(['manager', 'team_lead']);
+    $pickupService = Flight::get('service.pickups');
+    $reportService = Flight::get('service.reports');
+    $payload = getJsonPayload();
+
+    try {
+        $pickup = $pickupService->createWithReport($payload, $reportService);
+        Flight::json($pickup, 201);
+    } catch (Throwable $throwable) {
+        respondWithError($throwable);
+    }
+});
 registerCrudRoutes('team-applications', 'service.team_applications');
+
+Flight::route('GET /api/reports/statistics', static function () {
+    requireAuth();
+    $service = Flight::get('service.reports');
+    Flight::json($service->statistics());
+});
 
 function registerCrudRoutes(string $resource, string $serviceKey): void
 {

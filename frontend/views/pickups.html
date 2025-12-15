@@ -17,8 +17,8 @@
       <h3 class="h5 mb-3">Plan Pickup</h3>
       <form id="pickup-form" class="row g-3">
         <div class="col-12 col-md-3">
-          <label for="pickup-report-id" class="form-label">Report ID</label>
-          <input type="number" class="form-control" id="pickup-report-id" required />
+          <label for="pickup-company" class="form-label">Company (name or ID)</label>
+          <input type="text" class="form-control" id="pickup-company" placeholder="Acme Inc or ID" />
         </div>
         <div class="col-12 col-md-3">
           <label for="pickup-window-start" class="form-label">Window Start</label>
@@ -31,6 +31,38 @@
         <div class="col-12 col-md-3">
           <label for="pickup-location" class="form-label">Location</label>
           <input type="text" class="form-control" id="pickup-location" required />
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="pickup-report-id" class="form-label">Existing Report ID (optional)</label>
+          <input type="number" class="form-control" id="pickup-report-id" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-pcs" class="form-label">PCs</label>
+          <input type="number" class="form-control" id="pickup-num-pcs" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-laptops" class="form-label">Laptops</label>
+          <input type="number" class="form-control" id="pickup-num-laptops" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-surface" class="form-label">Surface</label>
+          <input type="number" class="form-control" id="pickup-num-surface" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-servers" class="form-label">Servers</label>
+          <input type="number" class="form-control" id="pickup-num-servers" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-switchers" class="form-label">Switchers</label>
+          <input type="number" class="form-control" id="pickup-num-switchers" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-num-hdds" class="form-label">HDDs</label>
+          <input type="number" class="form-control" id="pickup-num-hdds" value="0" />
+        </div>
+        <div class="col-12 col-md-2">
+          <label for="pickup-memberships" class="form-label">Memberships</label>
+          <input type="number" class="form-control" id="pickup-memberships" value="0" />
         </div>
         <div class="col-12 d-flex justify-content-end">
           <button type="submit" class="btn btn-primary">Schedule Pickup</button>
