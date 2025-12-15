@@ -1,15 +1,89 @@
 openapi: 3.0.3
 info:
   title: ReportApp25 API
-  version: '0.3.0'
+  version: '0.4.0'
   description: |
     FlightPHP-based REST API powering ReportApp25. This milestone delivers CRUD for users, teams, companies, reports, pickups, and team applications.
 servers:
   - url: http://localhost:8080
 paths:
+  /api/auth/register:
+    post:
+      summary: Register new user (team lead)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name, email, password]
+              properties:
+                full_name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Registered user + token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Token and user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+  /api/auth/me:
+    get:
+      summary: Current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Authenticated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+paths:
   /api/users:
     get:
       summary: List users
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of users
@@ -21,6 +95,8 @@ paths:
                   $ref: '#/components/schemas/User'
     post:
       summary: Create user
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -37,6 +113,8 @@ paths:
   /api/users/{id}:
     get:
       summary: Get user
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -50,6 +128,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace user
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -67,6 +147,8 @@ paths:
                 $ref: '#/components/schemas/User'
     patch:
       summary: Update user
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -84,6 +166,8 @@ paths:
                 $ref: '#/components/schemas/User'
     delete:
       summary: Delete user
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -99,6 +183,8 @@ paths:
   /api/teams:
     get:
       summary: List teams
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of teams
@@ -110,6 +196,8 @@ paths:
                   $ref: '#/components/schemas/Team'
     post:
       summary: Create team
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -126,6 +214,8 @@ paths:
   /api/teams/{id}:
     get:
       summary: Get team
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -139,6 +229,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace team
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -156,6 +248,8 @@ paths:
                 $ref: '#/components/schemas/Team'
     patch:
       summary: Update team
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -173,6 +267,8 @@ paths:
                 $ref: '#/components/schemas/Team'
     delete:
       summary: Delete team
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -188,6 +284,8 @@ paths:
   /api/companies:
     get:
       summary: List companies
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of companies
@@ -199,6 +297,8 @@ paths:
                   $ref: '#/components/schemas/Company'
     post:
       summary: Create company
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -215,6 +315,8 @@ paths:
   /api/companies/{id}:
     get:
       summary: Get company
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -228,6 +330,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace company
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -245,6 +349,8 @@ paths:
                 $ref: '#/components/schemas/Company'
     patch:
       summary: Update company
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -262,6 +368,8 @@ paths:
                 $ref: '#/components/schemas/Company'
     delete:
       summary: Delete company
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -277,6 +385,8 @@ paths:
   /api/reports:
     get:
       summary: List reports
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of reports
@@ -288,6 +398,8 @@ paths:
                   $ref: '#/components/schemas/Report'
     post:
       summary: Create report
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -304,6 +416,8 @@ paths:
   /api/reports/{id}:
     get:
       summary: Get report
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -317,6 +431,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace report
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -334,6 +450,8 @@ paths:
                 $ref: '#/components/schemas/Report'
     patch:
       summary: Update report
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -351,6 +469,8 @@ paths:
                 $ref: '#/components/schemas/Report'
     delete:
       summary: Delete report
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -366,6 +486,8 @@ paths:
   /api/pickups:
     get:
       summary: List pickups
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of pickups
@@ -377,6 +499,8 @@ paths:
                   $ref: '#/components/schemas/Pickup'
     post:
       summary: Create pickup
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -393,6 +517,8 @@ paths:
   /api/pickups/{id}:
     get:
       summary: Get pickup
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -406,6 +532,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace pickup
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -423,6 +551,8 @@ paths:
                 $ref: '#/components/schemas/Pickup'
     patch:
       summary: Update pickup
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -440,6 +570,8 @@ paths:
                 $ref: '#/components/schemas/Pickup'
     delete:
       summary: Delete pickup
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -455,6 +587,8 @@ paths:
   /api/team-applications:
     get:
       summary: List team applications
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Array of applications
@@ -466,6 +600,8 @@ paths:
                   $ref: '#/components/schemas/TeamApplication'
     post:
       summary: Create team application
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -482,6 +618,8 @@ paths:
   /api/team-applications/{id}:
     get:
       summary: Get team application
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -495,6 +633,8 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       summary: Replace team application
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -512,6 +652,8 @@ paths:
                 $ref: '#/components/schemas/TeamApplication'
     patch:
       summary: Update team application
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       requestBody:
@@ -529,6 +671,8 @@ paths:
                 $ref: '#/components/schemas/TeamApplication'
     delete:
       summary: Delete team application
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdParam'
       responses:
@@ -542,6 +686,11 @@ paths:
           $ref: '#/components/responses/NotFound'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   parameters:
     IdParam:
       name: id
