@@ -75,8 +75,18 @@ Flight::route('GET /api/auth/me', static function () {
 // Reports statistics and export
 Flight::route('GET /api/reports/statistics', static function () {
     requireAuth();
+    $request = Flight::request();
+    $filters = array_filter([
+        'month' => $request->query['month'] ?? null,
+        'year' => $request->query['year'] ?? null,
+        'province' => $request->query['province'] ?? null,
+        'company_id' => $request->query['company_id'] ?? null,
+        'submitted_by' => $request->query['submitted_by'] ?? null,
+        'status' => $request->query['status'] ?? null,
+    ], static fn ($value) => $value !== null && $value !== '');
+
     $service = Flight::get('service.reports');
-    $stats = $service->statistics();
+    $stats = $service->statistics($filters);
     Flight::json($stats);
 });
 
@@ -108,12 +118,6 @@ Flight::route('POST /api/pickups-with-report', static function () {
     }
 });
 registerCrudRoutes('team-applications', 'service.team_applications');
-
-Flight::route('GET /api/reports/statistics', static function () {
-    requireAuth();
-    $service = Flight::get('service.reports');
-    Flight::json($service->statistics());
-});
 
 function registerCrudRoutes(string $resource, string $serviceKey): void
 {

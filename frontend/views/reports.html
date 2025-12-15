@@ -6,69 +6,165 @@
         Review submitted pickup reports, verify collected items, and export them for compliance.
       </p>
     </div>
-    <div class="mt-3 mt-md-0">
-      <button class="btn btn-primary me-2" data-role="admin" id="reports-create-btn">New Report</button>
-      <button class="btn btn-outline-secondary" data-role="admin" id="reports-export-btn">Export All</button>
-    </div>
   </div>
 
   <div class="card mb-4" data-role="admin">
     <div class="card-body">
-      <h3 class="h5 mb-3">Create Report</h3>
-      <form id="report-form" class="row g-3">
-        <div class="col-12 col-md-4">
-          <label for="report-company-id" class="form-label">Company (name or ID)</label>
-          <input type="text" class="form-control" id="report-company-id" placeholder="Acme Inc or ID" />
+      <h3 class="h5 mb-3">Reporting Filters</h3>
+      <form id="report-filter-form" class="row g-3 align-items-end">
+        <div class="col-6 col-md-2">
+          <label for="filter-month" class="form-label">Month</label>
+          <input type="number" min="1" max="12" class="form-control" id="filter-month" placeholder="MM" />
         </div>
-        <div class="col-12 col-md-4">
-          <label for="report-total-items" class="form-label">Total Items</label>
-          <input type="number" class="form-control" id="report-total-items" value="0" readonly />
+        <div class="col-6 col-md-2">
+          <label for="filter-year" class="form-label">Year</label>
+          <input type="number" min="2020" max="2100" class="form-control" id="filter-year" placeholder="YYYY" />
         </div>
-        <div class="col-12 col-md-4">
-          <label for="report-status" class="form-label">Status</label>
-          <select class="form-select" id="report-status">
-            <option value="submitted">Submitted</option>
+        <div class="col-6 col-md-2">
+          <label for="filter-province" class="form-label">Province</label>
+          <input type="text" class="form-control" id="filter-province" placeholder="e.g. BC" maxlength="2" />
+        </div>
+        <div class="col-6 col-md-2">
+          <label for="filter-status" class="form-label">Status</label>
+          <select class="form-select" id="filter-status">
+            <option value="">Any</option>
             <option value="draft">Draft</option>
+            <option value="submitted">Submitted</option>
             <option value="approved">Approved</option>
             <option value="rejected">Rejected</option>
           </select>
         </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-pcs" class="form-label">PCs</label>
-          <input type="number" class="form-control" id="report-num-pcs" value="0" />
+        <div class="col-12 col-md-4">
+          <label for="filter-company" class="form-label">Company</label>
+          <input type="text" class="form-control" id="filter-company" placeholder="Start typing a company" list="filter-company-options" />
+          <datalist id="filter-company-options"></datalist>
         </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-laptops" class="form-label">Laptops</label>
-          <input type="number" class="form-control" id="report-num-laptops" value="0" />
-        </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-surface" class="form-label">Surface</label>
-          <input type="number" class="form-control" id="report-num-surface" value="0" />
-        </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-servers" class="form-label">Servers</label>
-          <input type="number" class="form-control" id="report-num-servers" value="0" />
-        </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-switchers" class="form-label">Switchers</label>
-          <input type="number" class="form-control" id="report-num-switchers" value="0" />
-        </div>
-        <div class="col-12 col-md-2">
-          <label for="report-num-hdds" class="form-label">HDDs</label>
-          <input type="number" class="form-control" id="report-num-hdds" value="0" />
-        </div>
-        <div class="col-12 col-md-2">
-          <label for="report-memberships" class="form-label">Memberships</label>
-          <input type="number" class="form-control" id="report-memberships" value="0" />
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">Save Report</button>
+        <div class="col-12 d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary" id="report-refresh-btn">Apply Filters</button>
+          <button type="button" class="btn btn-outline-secondary" id="report-reset-btn">Reset</button>
+          <button type="button" class="btn btn-outline-success ms-auto" id="reports-export-btn">Export CSV</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div class="card">
+  <div class="row g-3 mb-4" id="report-summary-cards">
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Total Points</p>
+        <h3 class="h4 mb-0" id="report-summary-points">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Reports</p>
+        <h3 class="h4 mb-0" id="report-summary-count">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Unique Companies</p>
+        <h3 class="h4 mb-0" id="report-summary-companies">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">PCs Donated</p>
+        <h3 class="h4 mb-0" id="report-summary-pcs">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Laptops</p>
+        <h3 class="h4 mb-0" id="report-summary-laptops">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Surface</p>
+        <h3 class="h4 mb-0" id="report-summary-surface">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Servers</p>
+        <h3 class="h4 mb-0" id="report-summary-servers">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Switchers</p>
+        <h3 class="h4 mb-0" id="report-summary-switchers">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">HDDs Shredded</p>
+        <h3 class="h4 mb-0" id="report-summary-hdds">0</h3>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card p-3 rounded bg-light h-100">
+        <p class="text-muted mb-1 small text-uppercase">Memberships</p>
+        <h3 class="h4 mb-0" id="report-summary-memberships">0</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="h5 mb-3">Summary by Province</h3>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Province</th>
+              <th scope="col">Companies</th>
+              <th scope="col">Total Items</th>
+              <th scope="col">Points</th>
+              <th scope="col">PCs</th>
+              <th scope="col">Laptops</th>
+              <th scope="col">Surface</th>
+              <th scope="col">Servers</th>
+              <th scope="col">Switchers</th>
+              <th scope="col">HDDs</th>
+              <th scope="col">Memberships</th>
+            </tr>
+          </thead>
+          <tbody id="report-province-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="h5 mb-3">Summary by City</h3>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th scope="col">City</th>
+              <th scope="col">Province</th>
+              <th scope="col">Companies</th>
+              <th scope="col">Total Items</th>
+              <th scope="col">Points</th>
+              <th scope="col">PCs</th>
+              <th scope="col">Laptops</th>
+              <th scope="col">Surface</th>
+              <th scope="col">Servers</th>
+              <th scope="col">Switchers</th>
+              <th scope="col">HDDs</th>
+              <th scope="col">Memberships</th>
+            </tr>
+          </thead>
+          <tbody id="report-city-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
     <div class="card-body">
       <div class="table-responsive">
         <table class="table align-middle" id="reports-table">
@@ -77,6 +173,7 @@
               <th scope="col">ID</th>
               <th scope="col">Company</th>
               <th scope="col">Total Items</th>
+              <th scope="col">Items Donated</th>
               <th scope="col">Points</th>
               <th scope="col">Status</th>
               <th scope="col">Submitted At</th>
@@ -85,6 +182,69 @@
           <tbody></tbody>
         </table>
         <div class="alert alert-warning mt-3 d-none" id="reports-alert"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-12 col-lg-6">
+          <h3 class="h5 mb-3">Monthly Points</h3>
+          <canvas id="report-monthly-chart"></canvas>
+        </div>
+        <div class="col-12 col-lg-6">
+          <h3 class="h5 mb-3">Points by Province</h3>
+          <canvas id="report-province-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="h5 mb-3">Top Users</h3>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Reports</th>
+              <th scope="col">Companies</th>
+              <th scope="col">Points</th>
+            </tr>
+          </thead>
+          <tbody id="report-users-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3 class="h5 mb-3">Company Detail</h3>
+      <div class="table-responsive">
+        <table class="table align-middle" id="reports-company-table">
+          <thead>
+            <tr>
+              <th scope="col">Company</th>
+              <th scope="col">Owners</th>
+              <th scope="col">Province</th>
+              <th scope="col">City</th>
+              <th scope="col">Points</th>
+              <th scope="col">PCs</th>
+              <th scope="col">Laptops</th>
+              <th scope="col">Surface</th>
+              <th scope="col">Servers</th>
+              <th scope="col">Switchers</th>
+              <th scope="col">HDDs</th>
+              <th scope="col">Memberships</th>
+              <th scope="col">Last Reported</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
   </div>
