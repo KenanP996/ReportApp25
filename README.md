@@ -1,8 +1,13 @@
 # ReportApp25
 
-ReportApp25 is a single-page operations dashboard that will help regional managers coordinate electronics donation pickups across Canada. The backend will be powered by FlightPHP and MySQL, while the frontend uses vanilla JavaScript, Bootstrap 5, and Chart.js.
+ReportApp25 is a single-page operations dashboard that helps regional managers coordinate electronics donation pickups across Canada. The backend is powered by FlightPHP + MySQL and the frontend uses vanilla JavaScript, Bootstrap 5, and Chart.js.
 
-This repository currently reflects Milestone 5 of the project plan: the static SPA from Milestone 1, a MySQL schema and DAO layer from Milestone 2, service-layer validation and OpenAPI from Milestone 3, JWT auth/RBAC from Milestone 4, plus frontend service refactor, validation, and deployment assets.
+This branch reflects the cumulative work through Milestone 5:
+- Milestone 1 SPA shell + responsive UI
+- Milestone 2 schema/DAO layer
+- Milestone 3 validation + OpenAPI 3 spec
+- Milestone 4 JWT auth and role-based middleware
+- Milestone 5 feature parity with the React playground reference (live dashboards, pickups, reports, exports, and deployment assets)
 
 ## Repository Layout
 
@@ -14,60 +19,99 @@ ReportApp25/
 │  ├─ services/               # Business logic layer (validation + orchestration)
 │  ├─ dao/                    # PDO-based data access classes
 │  ├─ config/                 # Bootstrap + environment loading
-│  ├─ src/                    # Namespaced PHP classes
+│  ├─ src/                    # Shared helpers (Points, etc.)
 │  ├─ tests/                  # PHPUnit scaffolding
 │  └─ composer.json
 ├─ frontend/
-│  ├─ index.html              # SPA shell that loads CSS/JS once
-│  ├─ css/styles.css          # Custom theme
-│  ├─ services/               # SPA controller, API client, form validation
-│  ├─ views/                  # HTML fragments for each feature/page
+│  ├─ index.html              # SPA shell (loads CSS/JS once)
+│  ├─ css/styles.css          # Custom theme variables
+│  ├─ services/               # SPA controller, API client, forms, charts
+│  ├─ views/                  # HTML fragments (dashboard, reports, pickups, etc.)
 │  └─ assets/logo.svg
-├─ docs/
-│  ├─ ERD.md                  # Draft entity relationship diagram (Mermaid)
-│  ├─ schema.sql              # MySQL DDL used for Milestone 2
-│  └─ openapi.yaml            # OpenAPI 3 spec (Milestone 3+)
-├─ docker-compose.yml         # Local/dev deployment stack (MySQL, backend, frontend)
-└─ scripts/                   # Tooling helpers (deploy.sh, seed-manager.php)
+├─ docs/                      # ERD, schema, OpenAPI, deployment notes
+├─ deploy/ + scripts/         # Helper scripts for dev/prod (docker, seeding)
+├─ docker-compose*.yml        # Local + production stacks
+└─ frontend/backend Dockerfiles
 ```
 
-## Frontend Prototype (Milestone 1)
+## Feature Highlights
 
-- Implements SPA navigation that fetches view fragments without full reloads.
-- Provides static pages for Dashboard, Reports, Teams, Pickups, Applications, Profile, Login, Register, Recover, Privacy, and Terms.
-- Demonstrates responsive design with Bootstrap 5 and a custom theme.
-- Visualizes placeholder metrics using Chart.js.
-- Includes mock data that reflects the planned entities and roles (Manager, Team Lead).
+1. **Authentication & RBAC**
+   - JWT login/register endpoints with hashed passwords.
+   - `requireAuth` and `requireRole` middleware guard CRUD routes.
+   - SPA navigation enforces route-level guards and hides manager-only CTAs in the UI.
 
-## Backend Progress (Milestone 5)
+2. **Pickup + Company Workflow**
+   - Single pickup request form mirrors the playground UI.
+   - Users search companies via datalist; new companies are auto-created when needed.
+   - Backend creates the pickup and an associated report so users never enter numeric IDs.
 
-- Environment + PDO bootstrap via FlightPHP and `vlucas/phpdotenv`.
-- DAO classes for Users, Teams, Companies, Reports, Pickups, and Team Applications, plus service-layer validation.
-- JWT auth endpoints (`/api/auth/register`, `/api/auth/login`, `/api/auth/me`) and middleware (`requireAuth`, `requireRole`).
-- CRUD endpoints under `/api/*` for all entities with manager-only mutations and read access for authenticated users.
-- Presentation layer routes at `/` (endpoint summary) and `/docs` (Swagger UI reading `docs/openapi.yaml`).
-- Deployment assets: `docker-compose.yml`, backend Dockerfile, frontend Dockerfile, and Docker env example.
+3. **Reports Library & Exports**
+   - Filter fields: month, year, province, status, company name.
+   - KPI tiles, per-province/city tables with per-device columns, monthly trend chart, province pie chart, “Top Users,” and detailed company rollups.
+   - CSV export mirrors the grid (company, device counts, memberships, points, submitter info, timestamps).
+   - Frontend prefers `/api/reports/statistics` but can rebuild the same summaries client-side if only `/api/reports` is exposed.
 
-## Frontend Progress (Milestone 5)
+4. **Dashboard**
+   - Live quick stats (reports, pickups, teams, total points) plus upcoming pickups and recent reports driven by the same summarized dataset.
+   - Productivity chart uses actual monthly points, not mocked data.
 
-- JS refactor into frontend/services (API client, form validation, SPA controller).
-- Auth-connected SPA that enforces route guards, renders role-aware UI (admin only for managers), and consumes live API data across dashboard, admin, teams, reports, pickups, applications, and profile.
-- Client-side validations for login/register forms (email/password length checks) with inline error display.
+5. **Admin & Teams**
+   - Managers can inspect user/team counts and recent reports.
+   - Everyone can browse teams with server-provided data.
 
-## Deployment
+## Data Flow & Points Calculation
 
-Local/dev Docker stack:
+- `ReportApp25\Utils\Points` normalizes both camelCase and snake_case item keys (`numPcs`, `num_pcs`, `pcs`, etc.) before computing points, so migrated data remains accurate.
+- The statistics endpoint aggregates totals, province/city summaries, per-user standings, company rollups, and monthly charts for the dashboards.
+- When statistics are unavailable, the SPA fetches `/api/reports`, `/api/companies`, and `/api/users`, normalizes item counts, and rebuilds the same structures client-side. This guarantees demos never break even on constrained hosting.
+- Each pickup submission feeds the same helper, so dashboards, reports, and exports always reconcile with stored data.
+
+## Running Locally
+
 ```bash
+# copy env template and adjust secrets
+cp backend/.env.docker.example backend/.env
+
+# launch the full stack
 docker-compose up --build
-# backend on http://localhost:8080, frontend on http://localhost:5173, MySQL on 3307
+# Backend API:   http://localhost:8080
+# Frontend SPA:  http://localhost:5173
+# MySQL:         localhost:3307 (credentials from backend/.env)
 ```
 
-Backend Docker env example: `backend/.env.docker.example` (adjust secrets in a real deployment).
+Manual run:
 
-Live URL: https://project.noxfleet.org (SPA + proxied API under the same domain).
+```bash
+# backend
+cd backend
+composer install
+php -S localhost:8080 -t public
 
-## What’s Next
+# frontend
+cd frontend
+npm install
+npm run dev -- --host
+```
 
-1. Seed development data and extend the SPA with full CRUD forms and optimistic updates.
-2. Add production-grade auth hardening (refresh tokens, rate limiting) and e2e tests.
-3. Wire CI/CD to build Docker images, run tests, and deploy to your infra.
+## Demo / Defense Checklist
+
+Use these steps during your project defense to highlight every rubric item:
+
+1. **Auth** – Register a team lead, log in, and show route guards/nav adapting to the role. Explain JWT handling stored in `localStorage`.
+2. **Pickup & Company Creation** – On the Pickups page, either pick a company from the datalist or type a new one, fill contact/location/device counts, then schedule the pickup. Mention that the backend auto-creates the company and linked report.
+3. **Dashboard Evidence** – Switch to Dashboard, click “Refresh Data,” and show that the quick stats, upcoming pickups, recent reports, and productivity chart immediately reflect the pickup you submitted.
+4. **Reports Library Deep Dive** – Apply filters (month/province/company), showcase KPI tiles, province/city tables, charts, Top Users, and Company Detail. Click “Export CSV,” open the file, and point out that the values match the UI.
+5. **Admin View (if manager)** – Show the Admin tab to prove role-based access, highlighting user/team/report counts.
+6. **Fallback Story** – Mention that if `/api/reports/statistics` is disabled, the frontend rebuilds the same numbers via `/api/reports`, `/api/companies`, and `/api/users`, so the presentation stays consistent.
+
+## Repo Hygiene / Untracked Items
+
+- **Track in git**: everything in `backend`, `frontend`, `docs`, `deploy`, `scripts`, and the Dockerfiles/compose files.
+- **Keep untracked**: `cloudflared.rpm` (binary installer). Leave it out of git or add it to your global ignore list; it’s only needed locally.
+
+## Next Steps
+
+1. Seed development/demo data and add optimistic UI updates for CRUD flows.
+2. Harden auth (refresh tokens, throttling) and introduce Jest + PHPUnit suites.
+3. Wire CI/CD to build Docker images, run tests, and deploy automatically.
